@@ -1,6 +1,6 @@
 module.exports = {
   devServer: {
-    proxy: "http://localhost:3000",
+    proxy: "http://localhost:3000"
   },
   configureWebpack: {
     externals: {
@@ -8,6 +8,7 @@ module.exports = {
       vuex: "Vuex",
       axios: "axios",
       "vue-router": "VueRouter",
-    },
-  },
+      "elmenet-ui": "ELEMENT"
+    }
+  }
 };
