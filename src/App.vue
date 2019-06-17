@@ -1,29 +1,43 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+	<div id="app">
+		<loading-config v-if="loading"></loading-config>
+		<component :is="layout">
+			<router-view />
+		</component>
+	</div>
 </template>
+<script lang="ts">
+import Vue from "vue";
+import { GlobalService } from "./service";
+import { setRoutes } from "./router";
+import LoadingConfig from "./components/LoadingConfig.vue";
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+export default Vue.extend({
+	components: {
+		LoadingConfig
+	},
+	data() {
+		return {
+			loading: 0,
+			layout: "div"
+		};
+	},
+	async created() {
+		this.loading++;
+		const config = await GlobalService.getConfig();
+		setRoutes(config.routeItems);
+		const layoutComponent = await GlobalService.getComponent(
+			config.layoutComponent
+		);
+		this.setLayout(layoutComponent);
+		this.loading--;
+	},
+	methods: {
+		setLayout(component: any) {
+			Vue.component("micro-layout", component);
+			this.layout = "micro-layout";
+		}
+	}
+});
+</script>
+
