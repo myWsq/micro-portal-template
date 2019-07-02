@@ -45,7 +45,7 @@ export const GlobalService = {
             `Component does not exist in global: ${JSON.stringify(Component)}`
           );
         }
-        if (Component.css) {
+        if (Component.css && !document.querySelector(`link[href="${Component.css}"]`)) {
           const link = document.createElement("link");
           link.setAttribute("rel", "stylesheet");
           link.setAttribute("type", "text/css");
